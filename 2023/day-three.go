@@ -16,7 +16,7 @@ func main() {
 	// => 467835
 
 	fmt.Println(partTwoResults(getPartOneData()))
-	// =>
+	// => 80703636
 }
 
 func partOneResults(list []string) int {
@@ -55,6 +55,112 @@ func partTwoResults(list []string) int {
 	total := 0
 
 	return 0
+}
+
+func partTwoResults(list []string) int {
+	total := 0
+
+	for i := 0; i < len(list); i++ {
+		items := strings.Split(list[i], "")
+
+		for characterIndex, character := range items {
+			if !isAsterid(character) {
+				continue
+			}
+
+			ans := []int{}
+
+			numberLeft := getNumberToLeft(items, characterIndex-1)
+			numberRight := getNumberToRight(items, characterIndex+1)
+
+			if numberLeft != 0 {
+				ans = append(ans, numberLeft)
+			}
+
+			if numberRight != 0 {
+				ans = append(ans, numberRight)
+			}
+
+			if i-1 >= 0 {
+				fromAbove := getNumberNextLine(strings.Split(list[i-1], ""), characterIndex)
+
+				if fromAbove != 0 {
+					ans = append(ans, fromAbove)
+				}
+			}
+
+			if i+1 <= len(list) {
+				fromBelow := getNumberNextLine(strings.Split(list[i+1], ""), characterIndex)
+
+				if fromBelow != 0 {
+					ans = append(ans, fromBelow)
+				}
+			}
+
+			if len(ans) == 2 {
+				fmt.Println("============", ans[0], ans[1])
+				total += ans[0] * ans[1]
+			}
+		}
+	}
+
+	return total
+}
+
+func getNumberNextLine(items []string, index int) int {
+	direct := ""
+	left := ""
+	right := ""
+
+	if isNumber(items[index]) {
+		direct = items[index]
+	}
+
+	if index-1 >= 0 && isNumber(items[index-1]) {
+		left = strconv.Itoa(getNumberToLeft(items, index-1))
+	}
+
+	if index+1 < len(items) && isNumber(items[index+1]) {
+		right = strconv.Itoa(getNumberToRight(items, index+1))
+	}
+
+	num, _ := strconv.Atoi(left + direct + right)
+
+	return num
+}
+
+func getNumberToLeft(items []string, index int) int {
+	result := ""
+
+	for index >= 0 && isNumber(items[index]) {
+		result = items[index] + result
+		index--
+	}
+
+	if len(result) == 0 {
+		return 0
+	}
+
+	num, _ := strconv.Atoi(result)
+
+	return num
+}
+
+func getNumberToRight(items []string, index int) int {
+	result := ""
+
+	for index < len(items) && isNumber(items[index]) {
+		result += items[index]
+		index++
+	}
+
+	if len(result) == 0 {
+		return 0
+	}
+
+	num, _ := strconv.Atoi(result)
+
+	return num
 }
 
 func removeSpaces(value string) string {
