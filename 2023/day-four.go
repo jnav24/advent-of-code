@@ -33,11 +33,8 @@ func getPartOneSolution(items []string) int {
 		winningCards := strings.Split(strings.TrimSpace(cards[0]), " ")
 		myCards := strings.Split(cards[1], " ")
 
-		fmt.Println(winningCards, len(winningCards), myCards, len(myCards))
-
 		for _, card := range myCards {
 			if sliceContains(winningCards, card) {
-				fmt.Println("hit me")
 				if cardTotal == 0 {
 					cardTotal += 1
 					continue
